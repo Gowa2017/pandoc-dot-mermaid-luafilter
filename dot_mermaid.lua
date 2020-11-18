@@ -60,39 +60,52 @@ local function convert_inline_newline(inline)
     end
 end
 
--- Block filter function
-function Blocks(el)
-    local r = {}
-    for k, v in pairs(el) do
-        if v.t == "CodeBlock" then
-            e = get_dot_engine(v)
-            if e then
-                r[k] = render_dot_code(v.text, e)
-            elseif ismermaid(v) then
-                r[k] = render_memrmaid_code(v.text)
-            else
-                r[k] = v
+-- filter to block element
+function block(v)
+    if v.t == "CodeBlock" then
+        e = get_dot_engine(v)
+        if e then
+            return render_dot_code(v.text, e)
+        elseif ismermaid(v) then
+            return render_memrmaid_code(v.text)
+        else
+            return
+        end
+    elseif v.t == "Table" then
+        -- deal table header
+        for _, row in pairs(v.head[2]) do
+            for _, cell in pairs(row[2]) do
+                for _, block in pairs(cell.contents) do
+                    for _, inline in pairs(block.content) do
+                        if inline.t == "RawInline" then
+                            if string.match(inline.text, "<[BbRr]*.*>") then
+                                convert_inline_newline(inline)
+                            end
+                        end
+                    end
+                end
             end
-        elseif v.t == "Table" then
-            r[k] = v
-            for k, tbody in pairs(v.bodies) do
-                for _, row in pairs(tbody.body) do
-                    for _, cell in pairs(row[2]) do
-                        for _, block in pairs(cell.contents) do
-                            for _, inline in pairs(block.content) do
-                                if inline.t == "RawInline" then
-                                    if string.match(inline.text, "<[BbRr]*.*>") then
-                                        convert_inline_newline(inline)
-                                    end
+        end
+        -- deal table body
+        for k, tbody in pairs(v.bodies) do
+            for _, row in pairs(tbody.body) do
+                for _, cell in pairs(row[2]) do
+                    for _, block in pairs(cell.contents) do
+                        for _, inline in pairs(block.content) do
+                            if inline.t == "RawInline" then
+                                if string.match(inline.text, "<[BbRr]*.*>") then
+                                    convert_inline_newline(inline)
                                 end
                             end
                         end
                     end
                 end
             end
-        else
-            r[k] = v
         end
+        return v:clone()
+    else
+        return
     end
-    return r
 end
+
+return {{Block = block}}
