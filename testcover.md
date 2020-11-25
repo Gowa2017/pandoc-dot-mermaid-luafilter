@@ -2,7 +2,7 @@
 title: 割接方案
 company: 公司
 version: 100
-logo: /Users/gowa/Project/gxtelecom/logo.png
+logo: /Users/gogogogogogo/Project/logo.png
 docxtoc: true
 ---
 
