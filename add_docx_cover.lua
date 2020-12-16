@@ -129,11 +129,16 @@ function Pandoc(doc)
         end
         if k == "company" then
             blks.company = pandoc.RawBlock("openxml", string.format(com, v[1].text, os.date("%Y 年 %m 月 %d 日")))
+	else
+            blks.company = pandoc.RawBlock("openxml", string.format(com, '创意信息技术股份有限公司', os.date("%Y 年 %m 月 %d 日")))
         end
         if k == "logo" then
             blks.logo = pandoc.Para(pandoc.Image("", v[1].text))
+	else
+            blks.logo = pandoc.Para(pandoc.Image("", '/Users/gowa/Project/gxtelecom/logo.png'))
         end
-        if k == "docxtoc" and v then
+        if k == "docxtoc" and not v then
+	else
             blks.toc = pandoc.RawBlock("openxml", toc)
         end
     end
