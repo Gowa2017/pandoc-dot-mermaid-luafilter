@@ -128,6 +128,8 @@ function Pandoc(doc)
     v = doc.meta['version']
     if v then
         blks.version = pandoc.RawBlock("openxml", string.format(version, v[1].text))
+    else
+        blks.version = pandoc.RawBlock("openxml", string.format(version, '0.1'))
     end
 
     v = doc.meta['company']
