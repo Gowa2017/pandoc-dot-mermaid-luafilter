@@ -123,24 +123,31 @@ function prt_tbl(t)
 end
 function Pandoc(doc)
     local blks = {}
-    for k, v in pairs(doc.meta) do
-        if k == "version" then
-            blks.version = pandoc.RawBlock("openxml", string.format(version, v[1].text))
-        end
-        if k == "company" then
-            blks.company = pandoc.RawBlock("openxml", string.format(com, v[1].text, os.date("%Y 年 %m 月 %d 日")))
-	else
-            blks.company = pandoc.RawBlock("openxml", string.format(com, '创意信息技术股份有限公司', os.date("%Y 年 %m 月 %d 日")))
-        end
-        if k == "logo" then
-            blks.logo = pandoc.Para(pandoc.Image("", v[1].text))
-	else
-            blks.logo = pandoc.Para(pandoc.Image("", '/Users/gowa/Project/gxtelecom/logo.png'))
-        end
-        if k == "docxtoc" and not v then
-	else
-            blks.toc = pandoc.RawBlock("openxml", toc)
-        end
+    local v
+
+    v = doc.meta['version']
+    if v then
+        blks.version = pandoc.RawBlock("openxml", string.format(version, v[1].text))
+    end
+
+    v = doc.meta['company']
+    if v then
+        blks.company = pandoc.RawBlock("openxml", string.format(com, v[1].text, os.date("%Y 年 %m 月 %d 日")))
+    else
+        blks.company = pandoc.RawBlock("openxml", string.format(com, '创意信息技术股份有限公司', os.date("%Y 年 %m 月 %d 日")))
+    end
+
+    v = doc.meta['logo']
+    if v then
+        blks.logo = pandoc.Para(pandoc.Image("", v[1].text))
+    else
+        blks.logo = pandoc.Para(pandoc.Image("", '/Users/gowa/Project/gxtelecom/logo.png'))
+    end
+    
+    v = doc.meta['docxtoc']
+    if v and not v then
+    else
+        blks.toc = pandoc.RawBlock("openxml", toc)
     end
     local i = 1
     local order = {"version", "logo", "company", "toc"}
