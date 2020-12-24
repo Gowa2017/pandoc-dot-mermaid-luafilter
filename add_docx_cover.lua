@@ -2,7 +2,7 @@ local version =
     [[
     <w:p>
   <w:pPr>
-  <w:jc w:val="center"/></w:pPr>
+  <w:jc w:val="center"/>
   </w:pPr>
   <w:r>
   	<w:rPr>
@@ -159,5 +159,5 @@ function Pandoc(doc)
             i = i + 1
         end
     end
-    return pandoc.Pandoc(doc.blocks:clone(), doc.meta)
+    return pandoc.Pandoc(doc.blocks, doc.meta)
 end
