@@ -125,28 +125,28 @@ function Pandoc(doc)
     local blks = {}
     local v
 
-    v = doc.meta['version']
+    v = doc.meta["version"]
     if v then
         blks.version = pandoc.RawBlock("openxml", string.format(version, v[1].text))
     else
-        blks.version = pandoc.RawBlock("openxml", string.format(version, '0.1'))
+        blks.version = pandoc.RawBlock("openxml", string.format(version, "0.1"))
     end
 
-    v = doc.meta['company']
+    v = doc.meta["company"]
     if v then
         blks.company = pandoc.RawBlock("openxml", string.format(com, v[1].text, os.date("%Y 年 %m 月 %d 日")))
     else
-        blks.company = pandoc.RawBlock("openxml", string.format(com, '创意信息技术股份有限公司', os.date("%Y 年 %m 月 %d 日")))
+        blks.company = pandoc.RawBlock("openxml", string.format(com, "创意信息技术股份有限公司", os.date("%Y 年 %m 月 %d 日")))
     end
 
-    v = doc.meta['logo']
+    v = doc.meta["logo"]
     if v then
         blks.logo = pandoc.Para(pandoc.Image("", v[1].text))
     else
-        blks.logo = pandoc.Para(pandoc.Image("", '/Users/gowa/Project/gxtelecom/logo.png'))
+        blks.logo = pandoc.Para(pandoc.Image("", "/Users/gowa/Nutstore Files/我的坚果云/logo.png"))
     end
-    
-    v = doc.meta['docxtoc']
+
+    v = doc.meta["docxtoc"]
     if v and not v then
     else
         blks.toc = pandoc.RawBlock("openxml", toc)
@@ -159,5 +159,5 @@ function Pandoc(doc)
             i = i + 1
         end
     end
-    return pandoc.Pandoc(doc.blocks, doc.meta)
+    return pandoc.Pandoc(doc.blocks:clone(), doc.meta)
 end
