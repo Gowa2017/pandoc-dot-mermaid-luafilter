@@ -1,3 +1,11 @@
+local usage =
+    [[
+  cover: 表示是否要封面，默认是，不需要的话设置为 false
+  version: 版本号
+  company: 企业名
+  logo: logo 地址
+  docxtoc: 是否需要目录，默认是，不需要的话设置为 false
+]]
 local version =
     [[
     <w:p>
@@ -15,7 +23,7 @@ local version =
   <w:p>
   <w:pPr>
     <w:jc w:val="center"/>
-    <w:spacing  w:line="3200"/>
+    <w:spacing  w:line="2200"/>
   </w:pPr>
   <w:r>
         <w:br/>
@@ -39,8 +47,8 @@ local toc =
         </w:pPr>
         <w:r>
         <w:rPr>
-          <w:sz w:val="36"/>
-          <w:szCs w:val="36"/>
+          <w:sz w:val="20"/>
+          <w:szCs w:val="20"/>
           <w:b/>
           <w:bCs/>
         </w:rPr>
@@ -49,15 +57,15 @@ local toc =
       </w:p>
       <w:p>
         <w:r>
-          <w:fldChar w:fldCharType="begin" w:dirty="true"/>
+          <w:fldChar w:fldCharType="begin"/>
           <w:instrText xml:space="preserve">TOC \o "1-3" \h \z \u</w:instrText>
           <w:fldChar w:fldCharType="separate"/>
           <w:fldChar w:fldCharType="end"/>
-                  <w:br w:type="page"/>
         </w:r>
       </w:p>
     </w:sdtContent>
   </w:sdt>
+<w:br w:type="page"/>
 
 ]]
 local com =
@@ -122,6 +130,10 @@ function prt_tbl(t)
     end
 end
 function Pandoc(doc)
+    local isCover = doc.meta["cover"]
+    if not isCover then
+        return
+    end
     local blks = {}
     local v
 
@@ -147,8 +159,7 @@ function Pandoc(doc)
     end
 
     v = doc.meta["docxtoc"]
-    if v and not v then
-    else
+    if v then
         blks.toc = pandoc.RawBlock("openxml", toc)
     end
     local i = 1

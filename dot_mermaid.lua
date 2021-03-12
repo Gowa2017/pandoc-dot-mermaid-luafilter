@@ -3,6 +3,10 @@ local pipe = pandoc.pipe
 local stringify = (require "pandoc.utils").stringify
 -- graphviz engines
 local engines = {"dot", "fdp", "circo", "neato", "osage", "twopi"}
+local mermaidnum = 0
+local mermaiddir = "/Users/gowa/temp/mermaid/"
+local dotnum = 0
+local dotdir = "/Users/gowa/temp/dot/"
 
 -- is a item in array?
 local function isInArray(it, arr)
@@ -36,18 +40,32 @@ end
 
 -- use command `dot, fdp ...` to render a svg
 local function render_dot_code(code, e)
-    local img = pipe("base64", {}, pipe(e, {"-T" .. "svg"}, code))
-    return pandoc.Para({pandoc.Image("", "data:image/svg+xml;base64," .. img)})
+    if FORMAT == "latex" then
+        -- body
+        local img = pipe("base64", {}, pipe(e, {"-T" .. "svg"}, code))
+        return pandoc.Para({pandoc.Image("", "data:image/svg+xml;base64," .. img)})
+    elseif FORMAT == "docx" then
+        local outfilename = dotdir .. "dot" .. tostring(dotnum) .. ".png"
+        local img = pipe(e, {"-Tpng", "-o" .. outfilename}, code)
+        dotnum = dotnum + 1
+        return pandoc.Para({pandoc.Image({}, outfilename)})
+    end
 end
 
 -- user mermaid cli command mmdc to render memraid code
 local function render_memrmaid_code(code)
-    pipe(os.getenv("HOME") .. "/pandoc/luafilter/node_modules/.bin/mmdc", {"-t default -o svg"}, code)
-    local f = io.open("out.svg")
-    local img = pipe("base64", {}, (f:read("a")))
-    f:close()
-    os.remove("out.svg")
-    return pandoc.Para({pandoc.Image("", "data:image/svg+xml;base64," .. img)})
+    local outfilename = mermaiddir .. "mermaid" .. tostring(mermaidnum)
+    pipe(os.getenv("HOME") .. "/Repo/luafilter/node_modules/.bin/mmdc", {"-o", outfilename .. ".png"}, code)
+    mermaidnum = mermaidnum + 1
+    if FORMAT == "latex" then
+        local f = io.open(outfilename)
+        local img = pipe("base64", {}, (f:read("a")))
+        f:close()
+        os.remove(outfilename)
+        return pandoc.Para({pandoc.Image("", "data:image/svg+xml;base64," .. img)})
+    elseif FORMAT == "docx" then
+        return pandoc.Para({pandoc.Image({}, outfilename .. ".png")})
+    end
 end
 -- for pdf and docx , change <BR> to soft line break
 local function convert_inline_newline(inline)
