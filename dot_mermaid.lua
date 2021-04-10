@@ -55,15 +55,17 @@ end
 -- user mermaid cli command mmdc to render memraid code
 local function render_memrmaid_code(code)
     local outfilename = mermaiddir .. "mermaid" .. tostring(mermaidnum)
-    pipe(os.getenv("HOME") .. "/Repo/luafilter/node_modules/.bin/mmdc", {"-o", outfilename .. ".png"}, code)
-    mermaidnum = mermaidnum + 1
     if FORMAT == "latex" then
-        local f = io.open(outfilename)
+        pipe(os.getenv("HOME") .. "/Repo/luafilter/node_modules/.bin/mmdc", {"-o", outfilename .. ".svg"}, code)
+        local f = io.open(outfilename..'.svg')
         local img = pipe("base64", {}, (f:read("a")))
         f:close()
         os.remove(outfilename)
+        mermaidnum = mermaidnum + 1
         return pandoc.Para({pandoc.Image("", "data:image/svg+xml;base64," .. img)})
     elseif FORMAT == "docx" then
+        pipe(os.getenv("HOME") .. "/Repo/luafilter/node_modules/.bin/mmdc", {"-o", outfilename .. ".png"}, code)
+        mermaidnum = mermaidnum + 1
         return pandoc.Para({pandoc.Image({}, outfilename .. ".png")})
     end
 end

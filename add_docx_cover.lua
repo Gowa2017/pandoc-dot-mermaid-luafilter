@@ -8,25 +8,32 @@ local usage =
 ]]
 local version =
     [[
-    <w:p>
-  <w:pPr>
-  <w:jc w:val="center"/>
-  </w:pPr>
-  <w:r>
-  	<w:rPr>
-      <w:sz w:val="28"/>
-      <w:szCs w:val="28"/>
-    </w:rPr>
-    <w:t>版本号： v%s</w:t>
-  </w:r>
-</w:p>
   <w:p>
   <w:pPr>
     <w:jc w:val="center"/>
-    <w:spacing  w:line="2200"/>
+    <w:spacing  w:line="2000"/>
   </w:pPr>
   <w:r>
-        <w:br/>
+   
+  </w:r>
+</w:p>
+    <w:p>
+  <w:pPr>
+  <w:jc w:val="center"/>
+    <w:spacing  w:line="2000"/>
+  </w:pPr>
+  <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:hint="eastAsia"/>
+        <w:b/>
+        <w:bCs/>
+        <w:i/>
+        <w:iCs/>
+        <w:color w:val="000000"/>
+        <w:sz w:val="28"/>
+        <w:szCs w:val="28"/>
+      </w:rPr>
+    <w:t>版本号： v%s</w:t>
   </w:r>
 </w:p>
 ]]
@@ -83,8 +90,8 @@ local com =
         <w:i/>
         <w:iCs/>
         <w:color w:val="0000FF"/>
-        <w:sz w:val="36"/>
-        <w:szCs w:val="36"/>
+        <w:sz w:val="28"/>
+        <w:szCs w:val="28"/>
       </w:rPr>
       <w:t>智慧无尽●创意无限</w:t>
     </w:r>
@@ -96,7 +103,26 @@ local com =
     </w:pPr>
     <w:r>
       <w:rPr>
-        <w:rFonts/>
+        <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
+        <w:b/>
+        <w:bCs/>
+        <w:u w:val="single"/>
+        <w:uCs w:val="single"/>
+        <w:color w:val="0000ff"/>
+        <w:sz w:val="36"/>
+        <w:szCs w:val="36"/>
+      </w:rPr>
+      <w:t>www.troy.cn</w:t>
+    </w:r>
+  </w:p>
+  <w:p>
+    <w:pPr>
+      <w:widowControl/>
+      <w:jc w:val="center"/>
+    </w:pPr>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
         <w:b/>
         <w:bCs/>
         <w:color w:val="000000"/>
@@ -108,7 +134,14 @@ local com =
   </w:p>
   <w:p>
     <w:pPr>
-      <w:jc w:val="center"/>
+    <w:jc w:val="center"/>
+    <w:sectPr w:rsidR="0006207D" w:rsidRPr="00635692">
+      <w:pgSz w:w="11900" w:h="16840"/>
+      <w:pgMar w:top="1440" w:right="1588" w:bottom="1440" w:left="1588" w:header="720" w:footer="720" w:gutter="0"/>
+      <w:pgNumType w:start="1" w:chapStyle="1" w:chapSep="emDash"/>
+      <w:cols w:space="720"/>
+      <w:docGrid w:linePitch="326"/>
+    </w:sectPr>
     </w:pPr>
     <w:r>
         <w:rPr>
@@ -116,7 +149,6 @@ local com =
         <w:szCs w:val="36"/>
       </w:rPr>
       <w:t>%s</w:t>
-          <w:br w:type="page"/>
     </w:r>
   </w:p>  
 ]]
