@@ -6,7 +6,7 @@ local usage =
   logo: logo 地址
   docxtoc: 是否需要目录，默认是，不需要的话设置为 false
 ]]
-local fmt = require("fmt")
+local fmt = require(PANDOC_SCRIPT_FILE:match(".*/") .. "fmt")
 function prt_tbl(t)
     for k, v in pairs(t) do
         if type(v) == "table" then
