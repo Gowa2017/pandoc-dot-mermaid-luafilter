@@ -1,3 +1,10 @@
+---
+cover: true
+docxtoc: true
+title: 测试文档
+subtitle: 副标题
+---
+
 # How to
 
 First, use brew to install graphviz

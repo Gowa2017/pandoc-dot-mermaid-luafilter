@@ -6,152 +6,7 @@ local usage =
   logo: logo 地址
   docxtoc: 是否需要目录，默认是，不需要的话设置为 false
 ]]
-local version =
-    [[
-  <w:p>
-  <w:pPr>
-    <w:jc w:val="center"/>
-    <w:spacing  w:line="2000"/>
-  </w:pPr>
-  <w:r>
-   
-  </w:r>
-</w:p>
-    <w:p>
-  <w:pPr>
-  <w:jc w:val="center"/>
-    <w:spacing  w:line="2000"/>
-  </w:pPr>
-  <w:r>
-      <w:rPr>
-        <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:hint="eastAsia"/>
-        <w:b/>
-        <w:bCs/>
-        <w:i/>
-        <w:iCs/>
-        <w:color w:val="000000"/>
-        <w:sz w:val="28"/>
-        <w:szCs w:val="28"/>
-      </w:rPr>
-    <w:t>版本号： v%s</w:t>
-  </w:r>
-</w:p>
-]]
-local toc =
-    [[
-    <w:sdt>
-    <w:sdtPr>
-      <w:docPartObj>
-        <w:docPartGallery w:val="Table of Contents"/>
-        <w:docPartUnique/>
-      </w:docPartObj>
-    </w:sdtPr>
-    <w:sdtContent>
-      <w:p>
-        <w:pPr>
-          <w:pStyle w:val="TOCHeading"/>
-          <w:jc w:val="center"/>
-        </w:pPr>
-        <w:r>
-        <w:rPr>
-          <w:sz w:val="20"/>
-          <w:szCs w:val="20"/>
-          <w:b/>
-          <w:bCs/>
-        </w:rPr>
-          <w:t xml:space="preserve">目录</w:t>
-        </w:r>
-      </w:p>
-      <w:p>
-        <w:r>
-          <w:fldChar w:fldCharType="begin"/>
-          <w:instrText xml:space="preserve">TOC \o "1-3" \h \z \u</w:instrText>
-          <w:fldChar w:fldCharType="separate"/>
-          <w:fldChar w:fldCharType="end"/>
-        </w:r>
-      </w:p>
-    </w:sdtContent>
-  </w:sdt>
-<w:br w:type="page"/>
-
-]]
-local com =
-    [[
-    <w:p>
-    <w:pPr>
-      <w:widowControl/>
-      <w:jc w:val="center"/>
-    </w:pPr>
-    <w:r>
-      <w:rPr>
-        <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
-        <w:b/>
-        <w:bCs/>
-        <w:i/>
-        <w:iCs/>
-        <w:color w:val="0000FF"/>
-        <w:sz w:val="28"/>
-        <w:szCs w:val="28"/>
-      </w:rPr>
-      <w:t>智慧无尽●创意无限</w:t>
-    </w:r>
-  </w:p>
-  <w:p>
-    <w:pPr>
-      <w:widowControl/>
-      <w:jc w:val="center"/>
-    </w:pPr>
-    <w:r>
-      <w:rPr>
-        <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
-        <w:b/>
-        <w:bCs/>
-        <w:u w:val="single"/>
-        <w:uCs w:val="single"/>
-        <w:color w:val="0000ff"/>
-        <w:sz w:val="36"/>
-        <w:szCs w:val="36"/>
-      </w:rPr>
-      <w:t>www.troy.cn</w:t>
-    </w:r>
-  </w:p>
-  <w:p>
-    <w:pPr>
-      <w:widowControl/>
-      <w:jc w:val="center"/>
-    </w:pPr>
-    <w:r>
-      <w:rPr>
-        <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
-        <w:b/>
-        <w:bCs/>
-        <w:color w:val="000000"/>
-        <w:sz w:val="36"/>
-        <w:szCs w:val="36"/>
-      </w:rPr>
-      <w:t>%s</w:t>
-    </w:r>
-  </w:p>
-  <w:p>
-    <w:pPr>
-    <w:jc w:val="center"/>
-    <w:sectPr w:rsidR="0006207D" w:rsidRPr="00635692">
-      <w:pgSz w:w="11900" w:h="16840"/>
-      <w:pgMar w:top="1440" w:right="1588" w:bottom="1440" w:left="1588" w:header="720" w:footer="720" w:gutter="0"/>
-      <w:pgNumType w:start="1" w:chapStyle="1" w:chapSep="emDash"/>
-      <w:cols w:space="720"/>
-      <w:docGrid w:linePitch="326"/>
-    </w:sectPr>
-    </w:pPr>
-    <w:r>
-        <w:rPr>
-        <w:sz w:val="36"/>
-        <w:szCs w:val="36"/>
-      </w:rPr>
-      <w:t>%s</w:t>
-    </w:r>
-  </w:p>  
-]]
+local fmt = require("fmt")
 function prt_tbl(t)
     for k, v in pairs(t) do
         if type(v) == "table" then
@@ -160,6 +15,10 @@ function prt_tbl(t)
             print(k, v)
         end
     end
+end
+
+local function today()
+    return os.date("%Y 年 %m 月 %d 日")
 end
 function Pandoc(doc)
     local isCover = doc.meta["cover"]
@@ -171,28 +30,32 @@ function Pandoc(doc)
 
     v = doc.meta["version"]
     if v then
-        blks.version = pandoc.RawBlock("openxml", string.format(version, v[1].text))
+        blks.version = pandoc.RawBlock("openxml", string.format(fmt.version, v[1].text))
     else
-        blks.version = pandoc.RawBlock("openxml", string.format(version, "0.1"))
+        blks.version = pandoc.RawBlock("openxml", string.format(fmt.version, "0.1"))
     end
 
     v = doc.meta["company"]
     if v then
-        blks.company = pandoc.RawBlock("openxml", string.format(com, v[1].text, os.date("%Y 年 %m 月 %d 日")))
+        blks.company = pandoc.RawBlock("openxml", string.format(fmt.com, v[1].text, today()))
     else
-        blks.company = pandoc.RawBlock("openxml", string.format(com, "创意信息技术股份有限公司", os.date("%Y 年 %m 月 %d 日")))
+        blks.company =
+            pandoc.RawBlock(
+            "openxml",
+            string.format(fmt.com, fmt.defaultDescription, fmt.defaultDomainName, fmt.defaultComName, today())
+        )
     end
 
     v = doc.meta["logo"]
     if v then
         blks.logo = pandoc.Para(pandoc.Image("", v[1].text))
     else
-        blks.logo = pandoc.Para(pandoc.Image("", "/Users/gowa/Nutstore Files/我的坚果云/logo.png"))
+        blks.logo = pandoc.Para(pandoc.Image("logo", fmt.logo, "创意LOGO"))
     end
 
     v = doc.meta["docxtoc"]
     if v then
-        blks.toc = pandoc.RawBlock("openxml", toc)
+        blks.toc = pandoc.RawBlock("openxml", fmt.toc)
     end
     local i = 1
     local order = {"version", "logo", "company", "toc"}
