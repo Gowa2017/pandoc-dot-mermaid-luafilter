@@ -28,17 +28,17 @@ end
 
 -- use command `dot, fdp ...` to render a svg
 local function render_dot_code(code, e)
-  if FORMAT == "latex" then
-    -- body
-    local img = pipe("base64", {}, pipe(e, { "-T" .. "svg" }, code))
-    return
-      pandoc.Para({ pandoc.Image("", "data:image/svg+xml;base64," .. img) })
-  elseif FORMAT == "docx" then
+  -- if FORMAT == "latex" then
+  --   -- body
+  --   local img = pipe("base64", {}, pipe(e, { "-T" .. "svg" }, code))
+  --   return
+  --     pandoc.Para({ pandoc.Image("", "data:image/svg+xml;base64," .. img) })
+  -- elseif FORMAT == "docx" then
     local outfilename = dotdir .. "dot" .. tostring(dotnum) .. ".png"
     local img         = pipe(e, { "-Tpng", "-o" .. outfilename }, code)
     dotnum = dotnum + 1
     return pandoc.Para({ pandoc.Image({}, outfilename) })
-  end
+  --end
 end
 
 -- user mermaid cli command mmdc to render memraid code
