@@ -85,8 +85,8 @@ function block(v)
     end
   elseif v.t == "Table" then
     -- deal table header
-    for _, row in pairs(v.head[2]) do
-      for _, cell in pairs(row[2]) do
+    for _, row in pairs(v.head.rows) do
+      for _, cell in pairs(row.cells) do
         for _, block in pairs(cell.contents) do
           for _, inline in pairs(block.content) do
             if inline.t == "RawInline" then
@@ -101,7 +101,7 @@ function block(v)
     -- deal table body
     for k, tbody in pairs(v.bodies) do
       for _, row in pairs(tbody.body) do
-        for _, cell in pairs(row[2]) do
+        for _, cell in pairs(row.cells) do
           for _, block in pairs(cell.contents) do
             for _, inline in pairs(block.content) do
               if inline.t == "RawInline" then
