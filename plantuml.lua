@@ -1,3 +1,4 @@
+package.cpath = package.cpath .. ";" .. PANDOC_SCRIPT_FILE:match(".*/") .. "?.so"
 --- convert plantuml code to image url
 local zlib = require('zlib')
 local crypt = require('crypt')
@@ -5,9 +6,9 @@ local crypt = require('crypt')
 local URL = 'http://42.192.43.15:9999/plantuml/svg/'
 
 local function convert2image(text)
-    local stream = zlib.deflate()
+    local stream = zlib.deflate(9)
     local res, eof, ins, out = stream(text, 'finish')
-    return URL .. crypt.base64encode(res)
+    return URL .. crypt.base64encode(res):gsub('+', '-'):gsub('/', '_')
 end
 
 local function dump(o, depth)
