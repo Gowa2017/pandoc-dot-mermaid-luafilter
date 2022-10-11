@@ -2,7 +2,7 @@
 title: 割接方案
 company: 公司
 version: 100
-logo: /Users/gogogogogogo/Project/logo.png
+cover: true
 docxtoc: true
 ---
 
