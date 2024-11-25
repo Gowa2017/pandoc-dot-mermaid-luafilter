@@ -3,7 +3,7 @@ LUAINC ?= /usr/local/include/lua
 LUALIB ?= /usr/local/lib/lua/5.4
 
 CFLAGS = -I${LUAINC}
-LDFLAGS = -shared -fPIC -L${LUALIB} -llua
+LDFLAGS = -shared -fPIC -L${LUALIB} -undefined dynamic_lookup
 
 all: crypt.so zlib.so
 

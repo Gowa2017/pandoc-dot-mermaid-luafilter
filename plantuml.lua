@@ -3,12 +3,12 @@ package.cpath = package.cpath .. ";" .. PANDOC_SCRIPT_FILE:match(".*/") .. "?.so
 local zlib = require('zlib')
 local crypt = require('crypt')
 
-local URL = 'http://42.192.43.15:9999/plantuml/svg/'
+local URL = 'http://106.54.11.254:9999'
 
 local function convert2image(text)
     local stream = zlib.deflate(9)
     local res, eof, ins, out = stream(text, 'finish')
-    return URL .. crypt.base64encode(res):gsub('+', '-'):gsub('/', '_')
+    return string.format("%s/%s/%s", URL, FORMAT == "latex" and "png" or "svg", crypt.base64encode(res))
 end
 
 local function dump(o, depth)
@@ -42,6 +42,7 @@ local function block(v)
     end
     if not ok then return end
     local url = convert2image(v.text)
+    print(url)
     return pandoc.Image('plantuml', url)
 end
 

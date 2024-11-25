@@ -122,7 +122,7 @@ return {
     toc = tocFmt,
     com = comFmt,
     logo = logo,
-    defaultComName = "创意信息技术股份有限公司",
-    defaultDomainName = "www.troy.cn",
-    defaultDescription = "智慧无尽●创意无限"
+    defaultComName = "",
+    defaultDomainName = "",
+    defaultDescription = ""
 }
