@@ -3,7 +3,7 @@ package.cpath = package.cpath .. ";" .. PANDOC_SCRIPT_FILE:match(".*/") .. "?.so
 local zlib = require('zlib')
 local crypt = require('crypt')
 
-local URL = 'http://106.54.11.254:9999'
+local URL = 'http://118.24.44.71:5000/plantuml'
 
 local function convert2image(text)
     local stream = zlib.deflate(9)
