@@ -3,12 +3,12 @@ package.cpath = package.cpath .. ";" .. PANDOC_SCRIPT_FILE:match(".*/") .. "?.so
 local zlib = require('zlib')
 local crypt = require('crypt')
 
-local URL = 'http://118.24.44.71:5000/plantuml'
+local URL = 'http://118.24.44.71:5000'
 
-local function convert2image(text)
-    local stream = zlib.deflate(9)
+local function convert2image(gtype, text)
+    local stream = zlib.deflate(1)
     local res, eof, ins, out = stream(text, 'finish')
-    return string.format("%s/%s/%s", URL, FORMAT == "latex" and "png" or "svg", crypt.base64encode(res))
+    return string.format("%s/%s/%s/%s", URL, gtype, FORMAT == "latex" and "png" or "svg", crypt.base64encode(res))
 end
 
 local function dump(o, depth)
@@ -33,15 +33,18 @@ local function block(v)
     if v.t ~= "CodeBlock" then
         return
     end
-    local ok = false
+    local gtype  = nil
     for _, c in ipairs(v.attr.classes) do
         if c == 'plantuml' or c == 'puml' then
-            ok = true
+            gtype = 'plantuml'
+            break
+        elseif c == 'mermaid' then
+            gtype = 'mermaid'
             break
         end
     end
-    if not ok then return end
-    local url = convert2image(v.text)
+    if gtype == nil then return end
+    local url = convert2image(gtype, v.text)
     print(url)
     return pandoc.Image('plantuml', url)
 end

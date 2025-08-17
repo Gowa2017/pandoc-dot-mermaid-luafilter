@@ -1,28 +1,41 @@
-local os         = require "os"
-local pipe       = pandoc.pipe
-local stringify  = (require "pandoc.utils").stringify
+local os = require("os")
+local pipe = pandoc.pipe
+local stringify = (require("pandoc.utils")).stringify
 -- graphviz engines
-local engines    = { "dot", "fdp", "circo", "neato", "osage", "twopi" }
+local engines = { "dot", "fdp", "circo", "neato", "osage", "twopi" }
 local mermaidnum = 0
 local mermaiddir = "/tmp/"
-local dotnum     = 0
-local dotdir     = "/tmp/"
+local dotnum = 0
+local dotdir = "/tmp/"
+local MMDC = PANDOC_SCRIPT_FILE:match(".*/") .. "/node_modules/.bin/mermaid"
 
 -- is a item in array?
 local function isInArray(it, arr)
-    for _, v in pairs(arr) do if it == v then return true end end
+    for _, v in pairs(arr) do
+        if it == v then
+            return true
+        end
+    end
     return false
 end
 
 -- is a mermaid block?
 local function ismermaid(el)
-    for _, v in ipairs(el.classes) do if v == "mermaid" then return true end end
+    for _, v in ipairs(el.classes) do
+        if v == "mermaid" then
+            return true
+        end
+    end
     return false
 end
 
 -- which engine will be use
 local function get_dot_engine(el)
-    for _, v in ipairs(el.classes) do if isInArray(v, engines) then return v end end
+    for _, v in ipairs(el.classes) do
+        if isInArray(v, engines) then
+            return v
+        end
+    end
     return false
 end
 
@@ -35,8 +48,8 @@ local function render_dot_code(code, e)
     --     pandoc.Para({ pandoc.Image("", "data:image/svg+xml;base64," .. img) })
     -- elseif FORMAT == "docx" then
     local outfilename = dotdir .. "dot" .. tostring(dotnum) .. ".png"
-    local img         = pipe(e, { "-Tpng", "-o" .. outfilename }, code)
-    dotnum            = dotnum + 1
+    local img = pipe(e, { "-Tpng", "-o" .. outfilename }, code)
+    dotnum = dotnum + 1
     return pandoc.Para({ pandoc.Image({}, outfilename) })
     --end
 end
@@ -55,8 +68,7 @@ local function render_memrmaid_code(code)
     --     return
     --       pandoc.Para({ pandoc.Image("", "data:image/svg+xml;base64," .. img) })
     --   elseif FORMAT == "docx" then
-    pipe(os.getenv("HOME") .. "/Repo/luafilter/node_modules/.bin/mmdc",
-        { "-o", outfilename .. ".png", '-w', 1980, '-H', 1980, '-s', 2 }, code)
+    pipe(MMDC, { "-o", outfilename .. ".png", "-w", 1980, "-H", 1980, "-s", 2 }, code)
     mermaidnum = mermaidnum + 1
     return pandoc.Para({ pandoc.Image({}, outfilename .. ".png") })
     --   end
