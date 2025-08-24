@@ -1,6 +1,6 @@
 
-LUAINC ?= /usr/local/include/lua
-LUALIB ?= /usr/local/lib/lua/5.4
+LUAINC ?= $(shell brew --prefix)/include/lua
+LUALIB ?= $(shell brew --prefix)/lib
 
 CFLAGS = -I${LUAINC}
 LDFLAGS = -shared -fPIC -L${LUALIB} -undefined dynamic_lookup

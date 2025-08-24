@@ -6,9 +6,11 @@ local crypt = require('crypt')
 local URL = 'http://118.24.44.71:5000'
 
 local function convert2image(gtype, text)
-    local stream = zlib.deflate(1)
+    local stream = zlib.deflate(9)
     local res, eof, ins, out = stream(text, 'finish')
-    return string.format("%s/%s/%s/%s", URL, gtype, FORMAT == "latex" and "png" or "svg", crypt.base64encode(res))
+    return string.format("%s/%s/%s/%s", URL, gtype, FORMAT == "latex" and "svg" or "svg", crypt.base64encode(res):gsub('[+/]', function (c)
+        return c=="+" and "-" or "_"
+    end))
 end
 
 local function dump(o, depth)
@@ -40,6 +42,9 @@ local function block(v)
             break
         elseif c == 'mermaid' then
             gtype = 'mermaid'
+            break
+        elseif c == 'dot' or c == 'graphviz' then
+            gtype = 'graphviz'
             break
         end
     end
